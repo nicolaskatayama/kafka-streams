@@ -1,0 +1,73 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.4'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'jacoco'
+    id 'org.unbroken-dome.test-sets' version '4.0.0'
+}
+
+group 'br.com.coffeeandit'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    set('springCloudVersion', "2021.0.1")
+}
+
+testSets {
+    e2eTest { dirName = 'test-e2e' }
+    integrationTest { dirName = 'test-integration' }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+integrationTest {
+    useJUnitPlatform()
+}
+
+e2eTest {
+    useJUnitPlatform()
+}
+
+task todosTestes() {
+    dependsOn('test')
+    todosTestes.finalizedBy('testesIntegracaoEe2e')
+}
+
+task testesIntegracaoEe2e() {
+    dependsOn('integrationTest')
+    testesIntegracaoEe2e.finalizedBy('e2eTest')
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
+    implementation "org.apache.kafka:kafka-streams"
+
+    implementation "com.fasterxml.jackson.core:jackson-databind"
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation group: 'org.springframework.kafka', name: 'spring-kafka-test'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
+
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}

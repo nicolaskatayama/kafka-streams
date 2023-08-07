@@ -1,0 +1,10 @@
+{"id": "2","origin": "Poa","destination": "SP","name": "teste"}
+{"id": "3","origin": "SP","destination": "POA","name": "teste2"}
+{"id": "4","origin": "CAXIAS","destination": "POA","name": "teste3"}
+
+
+./kafka-topics.sh --zookeeper localhost:2181 --create --topic topic --replication-factor 1 --partitions 1
+./kafka-topics.sh --zookeeper localhost:2181 --create --topic othertopic --replication-factor 1 --partitions 1
+./kafka-topics.sh --zookeeper localhost:2181 --delete --topic topic
+./kafka-topics.sh --zookeeper localhost:2181 --delete --topic othertopic
+./kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic othertopic --from-beginning
